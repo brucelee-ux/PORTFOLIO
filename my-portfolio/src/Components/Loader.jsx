@@ -3,7 +3,7 @@ import {gsap} from 'gsap'
 
 const Loader = ({OnFinish}) => {
 
-    const letters = 'PORTFOLIO'.split('')
+    const letters = 'PORTFOLIO'.split('');
 
     const lettersRef = useRef([])
     const loaderRef = useRef(null)
@@ -25,6 +25,7 @@ const Loader = ({OnFinish}) => {
                 y:120,
                 opacity : 0,
                 duration : 0.4,
+                rotateX : -90,
                 stagger : 0.04,
                 ease : 'power3.out'
             },[OnFinish])
@@ -37,12 +38,12 @@ const Loader = ({OnFinish}) => {
 
   return (
     <section className='h-screen inset-0 w-screen bg-black flex items-center justify-center ' ref={loaderRef}>
-        <div className="h-[10vh] text-white flex text-6xl border-2 items-center justify-center overflow-hidden">
+        <div className="h-[10vh] text-white flex text-3xl border-2 items-center justify-center overflow-hidden font-bbh px-5">
             {letters.map((letter, i) => (
           <h1
             key={i}
             ref={(el) => (lettersRef.current[i] = el)}
-            className="mx-1"
+            className=""
           >
             {letter}
           </h1>
