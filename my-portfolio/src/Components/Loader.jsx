@@ -1,54 +1,48 @@
-import React, { useEffect, useRef } from 'react'
-import {gsap} from 'gsap'
+import React, { useLayoutEffect, useRef } from 'react'
+import gsap from 'gsap'
 
-const Loader = ({OnFinish}) => {
+const Loader = ({onFinish}) => {
 
-    const letters = 'PORTFOLIO'.split('');
+  const letters = "PORTFOLIO".split('')
+  const letterRef = useRef([])
+  const mainRef = useRef(null)
 
-    const lettersRef = useRef([])
-    const loaderRef = useRef(null)
+  useLayoutEffect(()=>{
+    const ctx = gsap.context(()=>{
 
-    useEffect(()=>{
-        const ctx = gsap.context(()=>{
+      const tl = gsap.timeline({
+        onComplete : onFinish
+      })
+      tl.from(letterRef.current,{
+        opacity : 0,
+        y : 120,
+        rotateX : 90,
+        duration:0.8,
+        ease : 'elastic.out(1,1)',
+        stagger :{
+          each : 0.05,
+          from : 'start'
+        }
+      })
 
-          const tl = gsap.timeline({
-            onComplete : ()=>{
-              gsap.to(loaderRef.current,{
-                y:'-100%',
-                duration : 0.7,
-                ease : 'power2.out',
-                onComplete : OnFinish,
-              },'+=0.6')
-            }
-          })
-            tl.from(lettersRef.current,{
-                y:120,
-                opacity : 0,
-                duration : 0.4,
-                rotateX : -90,
-                stagger : 0.04,
-                ease : 'power3.out'
-            },[OnFinish])
-        })
+      tl.to(mainRef.current,{
+        yPercent : -100,
+        duration: 0.6,
+        opacity: 0,
+        ease : 'power1.out'
+      },'+=0.7')
+    },mainRef)
 
-        return () => ctx.revert();
-    },[])
-
-    lettersRef.current = []
+    return () => ctx.revert();
+  },[onFinish])
 
   return (
-    <section className='h-screen inset-0 w-screen bg-black flex items-center justify-center ' ref={loaderRef}>
-        <div className="h-[10vh] text-white flex text-3xl border-2 items-center justify-center overflow-hidden font-bbh px-5">
-            {letters.map((letter, i) => (
-          <h1
-            key={i}
-            ref={(el) => (lettersRef.current[i] = el)}
-            className=""
-          >
-            {letter}
-          </h1>
-        ))}
-        </div>
+    <section className='fixed inset-0 bg-gray-950 z-40 h-screen w-screen flex items-center justify-center' ref={mainRef}>
+      <div className="flex text-white text-3xl font-bbh overflow-y-hidden">
+        {letters.map((letter,i)=>{
+          return <h1 key={i} ref={(el) => letterRef.current[i] = el} className='px-0.4'>{letter}</h1>
+        })}
+      </div>
     </section>
   )
 }
